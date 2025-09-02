@@ -7,15 +7,18 @@ using UnityEngine.UIElements;
 public class PlayerManager : MonoBehaviour
 {
     private StarterAssetsInputs input;
+    private ThirdPersonController controller;
     [Header("Aim")] 
     [SerializeField] private CinemachineVirtualCamera aimCam;
     [SerializeField] private GameObject aimImage;
     [SerializeField] private LayerMask targetLayer;
     [SerializeField] private GameObject aimObj;
     [SerializeField] private float aimObjDis;
+    
     private void Start()
     {
         input = GetComponent<StarterAssetsInputs>();
+        controller = GetComponent<ThirdPersonController>();
     }
 
     private void Update()
@@ -25,16 +28,14 @@ public class PlayerManager : MonoBehaviour
 
     private void AimCheck()
     {
-        
-        
-
         if (input.aim)
         {
-            aimCam.gameObject.SetActive(true);
-            aimImage.SetActive(true);
+            AimControll(true);
+            
             Vector3 targetPosition = Vector3.zero;
             Transform camTransform = Camera.main.transform;
             RaycastHit hit;
+            
             if (Physics.Raycast(camTransform.position, camTransform.forward, out hit, Mathf.Infinity,targetLayer))
             {
                 Debug.Log("Name :  "+ hit.transform.gameObject.name);
@@ -54,10 +55,16 @@ public class PlayerManager : MonoBehaviour
             transform.forward = Vector3.Lerp(transform.forward, aimDir, Time.deltaTime*50);
 
         }
-        else
+        else//  조준 x 
         {
-            aimCam.gameObject.SetActive(false);
-            aimImage.SetActive(false);
+            AimControll(false);
         }
+    }
+
+    private void AimControll(bool isCheck)
+    {
+        aimCam.gameObject.SetActive(isCheck);
+        aimImage.SetActive(isCheck);
+        controller.isAimMove = isCheck;
     }
 }
