@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class BulletManager : MonoBehaviour
@@ -11,11 +12,13 @@ public class BulletManager : MonoBehaviour
     }
 
     // Update is called once per frame
+    [Obsolete("Obsolete")]
     void Update()
     {
         BulletMove();
     }
 
+    [Obsolete("Obsolete")]
     private void BulletMove()
     {
         bulletRigidbody.velocity = transform.forward * moveSpeed;
