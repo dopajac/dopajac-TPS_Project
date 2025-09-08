@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject bulletCaseFX;
     [SerializeField] private Transform weaponClipPoint;
     [SerializeField] private GameObject weaponClipFX;
+    
     void Start()
     {
         instance = this;
@@ -40,7 +41,9 @@ public class GameManager : MonoBehaviour
     {
         currentShootDelay += Time.deltaTime;
         if (currentShootDelay < maxShootDelay || currentBulletCount <= 0)
-            return;
+        {
+            return; 
+        }
 
         currentBulletCount -= 1;
         currentShootDelay = 0;

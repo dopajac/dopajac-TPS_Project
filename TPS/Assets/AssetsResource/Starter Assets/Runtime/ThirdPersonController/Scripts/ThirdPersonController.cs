@@ -10,7 +10,7 @@ namespace StarterAssets
 {
     [RequireComponent(typeof(CharacterController))]
 #if ENABLE_INPUT_SYSTEM
-    [RequireComponent(typeof(PlayerInput))]
+    [RequireComponent(typeof(PlayerInput))]//
 #endif
     public class ThirdPersonController : MonoBehaviour
     {
@@ -399,5 +399,29 @@ namespace StarterAssets
                 AudioSource.PlayClipAtPoint(LandingAudioClip, transform.TransformPoint(_controller.center), FootstepAudioVolume);
             }
         }
+        // ThirdPersonController 클래스 내부 어딘가에 추가
+        public void ChargedJump(float desiredJumpHeight)
+        {
+            // 바닥에서만 차징 점프 허용 (원하면 2단/공중 허용 로직으로 바꿔도 됨)
+            if (!Grounded) return;
+
+            // 음수/0 보호
+            float h = Mathf.Max(0f, desiredJumpHeight);
+
+            // 점프 높이 -> 초기 수직속도 (Gravity는 음수 값이므로 -2f * Gravity가 양수)
+            _verticalVelocity = Mathf.Sqrt(h * -2f * Gravity);
+
+            // 점프 타임아웃/폴 타임아웃 Starter Assets 규약대로 초기화
+            _jumpTimeoutDelta = JumpTimeout;
+            _fallTimeoutDelta = FallTimeout;
+
+            // 애니메이터 갱신 (Starter Assets 기본 점프 트리거와 일관)
+            if (_hasAnimator)
+            {
+                _animator.SetBool(_animIDJump, true);
+                _animator.SetBool(_animIDFreeFall, false);
+            }
+        }
+        
     }
 }
