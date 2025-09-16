@@ -1,45 +1,41 @@
-using System;
 using UnityEngine;
 
 public class BulletManager : MonoBehaviour
 {
-    private Rigidbody bulletRigidbody;
-    [SerializeField]
-    private float moveSpeed = 10f;
+    [SerializeField] private float moveSpeed = 10f;
+    [SerializeField] private float lifeTime = 3f;
 
-    private float destoryTime = 3f;
-    void Start()
+    private Rigidbody _rb;
+    private float _t;
+
+    private void Awake()
     {
-        bulletRigidbody = GetComponent<Rigidbody>();
+        _rb = GetComponent<Rigidbody>();
     }
 
-    // Update is called once per frame
-    [Obsolete("Obsolete")]
-    void Update()
+    private void OnEnable()
     {
-        destoryTime -= Time.deltaTime;
-        if (destoryTime <= 0)
-        {
-            DestoryBullet();
-        }
-
-        BulletMove();
+        _t = 0f;
     }
 
-    [Obsolete("Obsolete")]
-    private void BulletMove()
+    private void Update()
     {
-        bulletRigidbody.velocity = transform.forward * moveSpeed;
+        _t += Time.deltaTime;
+        if (_t >= lifeTime) DestroyBullet();
     }
 
-    private void DestoryBullet()
-    { 
-        Destroy(gameObject);
-        destoryTime = 3f;
+    private void FixedUpdate()
+    {
+        if (_rb) _rb.linearVelocity = transform.forward * moveSpeed;
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        DestoryBullet();
+        DestroyBullet();
+    }
+
+    private void DestroyBullet()
+    {
+        Destroy(gameObject);
     }
 }

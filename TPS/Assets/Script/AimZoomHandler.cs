@@ -9,12 +9,24 @@ public class AimZoomHandler : MonoBehaviour
     public InputActionReference aimAction; // Player/Aim 액션
 
     [Header("Cams")]
-    public Cinemachine3rdPersonFollow baseCam_am; // 평상시 카메라
-    public CinemachineVirtualCamera aimCam;  // 견착 카메라(조준 시 활성)
+    public Cinemachine3rdPersonFollow baseCam_cm; // 기본 카메라 follow component
+    public CinemachineVirtualCamera   aimCam;     // ADS 카메라
 
-    [Header("Zoom")]
-    public float normalFov = -5f;
-    public float zoomFov = 40f;
+    [Header("Zoom by Distance (Tap)")]
+    public float normalDistance = 4.5f;
+    public float zoomDistance   = 2.5f;
+
+    [Header("FOV by Scope (ADS)")]
+    public float fovHip   = 70f;
+    public float fovDot   = 60f;
+    public float fov2x    = 50f;
+    public float fov4x    = 40f;
+    public float fov8x    = 30f;
+
+    [Header("Refs")]
+    public StarterAssets.StarterAssetsInputs input;
+    public Weapon currentWeapon; // 현재 무기(스코프 확인용)
+
     private bool zoomOn;
     private bool isAiming;
 
@@ -33,42 +45,66 @@ public class AimZoomHandler : MonoBehaviour
         a.Disable();
     }
 
-    private void OnStarted(InputAction.CallbackContext ctx) {
-        Debug.Log("RMB Down (started)");
+    private void Start()
+    {
+        ApplyDistance();
+        ApplyFov(fovHip);
     }
 
-    private void OnPerformed(InputAction.CallbackContext ctx) {
-        if (ctx.interaction is TapInteraction) {
-            Debug.Log("RMB Tap (performed at release)");
+    private void OnStarted(InputAction.CallbackContext ctx) { }
+    private void OnPerformed(InputAction.CallbackContext ctx)
+    {
+        if (ctx.interaction is TapInteraction)
+        {
             zoomOn = !zoomOn;
-            ApplyFov(zoomOn ? zoomFov : normalFov);   // 둘 다 적용
+            ApplyDistance();
         }
-        else if (ctx.interaction is HoldInteraction) {
-            Debug.Log("RMB Hold Reached (performed while pressed)");
+        else if (ctx.interaction is HoldInteraction)
+        {
             isAiming = true;
-            // PlayerManager가 input.aim을 보고 aimCam 활성화하므로 그대로 사용
             if (input) input.aim = true;
-            // 혹시 이미 줌 On이면 에임 카메라에도 FOV 즉시 반영
-            if (zoomOn) ApplyFov(zoomFov);
+            aimCam.gameObject.SetActive(true);
+            ApplyFov( GetScopeFov() );
+        }
+        else
+        {
+            // 인터랙션 미설정 시 Tap처럼
+            zoomOn = !zoomOn;
+            ApplyDistance();
         }
     }
 
-    private void OnCanceled(InputAction.CallbackContext ctx) {
-        Debug.Log("RMB Up (canceled)");
-        if (isAiming) {
+    private void OnCanceled(InputAction.CallbackContext ctx)
+    {
+        if (isAiming)
+        {
             isAiming = false;
             if (input) input.aim = false;
-            // 줌 상태 유지/해제는 디자인에 맞게. 유지하려면 아무 것도 안 해도 됨.
-            if (zoomOn) ApplyFov(zoomFov); else ApplyFov(normalFov);
+            aimCam.gameObject.SetActive(false);
+            ApplyFov(fovHip);
         }
     }
 
-    [Header("Refs")]
-    public StarterAssets.StarterAssetsInputs input;
+    private void ApplyDistance()
+    {
+        if (baseCam_cm) baseCam_cm.CameraDistance = zoomOn ? zoomDistance : normalDistance;
+    }
 
-    private void ApplyFov(float fov) {
-        //if (baseCam_am) baseCam_am.m_Lens.FieldOfView = fov;
-        if (aimCam)  aimCam.m_Lens.FieldOfView  = fov;
-        Debug.Log($"ApplyFov -> {fov}");
+    private float GetScopeFov()
+    {
+        if (!currentWeapon) return fovHip;
+        switch (currentWeapon.GetCurrentScope())
+        {
+            case ScopeKind.RedDot: return fovDot;
+            case ScopeKind.X2:     return fov2x;
+            case ScopeKind.X4:     return fov4x;
+            case ScopeKind.X8:     return fov8x;
+            default:               return fovHip;
+        }
+    }
+
+    private void ApplyFov(float fov)
+    {
+        if (aimCam) aimCam.m_Lens.FieldOfView = fov;
     }
 }

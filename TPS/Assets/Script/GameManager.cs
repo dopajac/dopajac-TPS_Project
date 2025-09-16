@@ -1,67 +1,53 @@
-using System.Net.Mime;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
     public static GameManager instance;
-    
-    [Header("Bullet")]
-    [SerializeField]
-    private GameObject bulletPrefab;
-    [SerializeField]
-    private Transform bulletPoint;
-    [SerializeField] private float maxShootDelay = 0.2f;
-    [SerializeField] private float currentShootDelay = 0.2f ;
-    [SerializeField] private Text BulletCountText;
-    private int maxBulletCount=30;
-    private int currentBulletCount;
-    
-    [Header("Weapon FX")] 
-    [SerializeField] private GameObject weaponFlashFX;
-    [SerializeField] private Transform bulletCasePoint;
-    [SerializeField] private GameObject bulletCaseFX;
-    [SerializeField] private Transform weaponClipPoint;
-    [SerializeField] private GameObject weaponClipFX;
-    
-    void Start()
+
+    [Header("Refs")]
+    [SerializeField] private Weapon currentWeapon;
+    [SerializeField] private Text bulletCountText;
+
+    private void Awake()
     {
         instance = this;
-        currentShootDelay = 0f;
-        InitBullet();
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-        BulletCountText.text = currentBulletCount + "/ " + maxBulletCount;;
+        if (!currentWeapon || !bulletCountText) return;
+        bulletCountText.text = currentWeapon.CurrentAmmo + " / " + currentWeapon.MagCapacity;
     }
 
+    // 총구(origin=총구)에서 발사 (기존 호환)
     public void Shooting(Vector3 targetPosition)
     {
-        currentShootDelay += Time.deltaTime;
-        if (currentShootDelay < maxShootDelay || currentBulletCount <= 0)
-        {
-            return; 
-        }
+        if (!currentWeapon) return;
+        currentWeapon.TryShoot(targetPosition);
+    }
 
-        currentBulletCount -= 1;
-        currentShootDelay = 0;
-        Instantiate(bulletCaseFX, bulletCasePoint);
-        Instantiate(weaponFlashFX, bulletPoint);
-        Vector3 aim = (targetPosition - bulletPoint.position).normalized;
-        Instantiate(bulletPrefab, bulletPoint.position, Quaternion.LookRotation(aim, Vector3.up));
+    // fromCamera=true 이면 카메라 중앙(origin)에서 발사
+    public void Shooting(Vector3 targetPosition, bool fromCamera, Vector3 origin)
+    {
+        if (!currentWeapon) return;
+
+        if (fromCamera)
+            currentWeapon.TryShootFrom(origin, targetPosition);
+        else
+            currentWeapon.TryShoot(targetPosition);
     }
 
     public void ReLoadClip()
     {
-        Instantiate(weaponClipFX, weaponClipPoint);
-        InitBullet();
+        if (!currentWeapon) return;
+        currentWeapon.Reload();
     }
 
-    private void InitBullet()
+    public void SetCurrentWeapon(Weapon w)
     {
-        currentBulletCount = maxBulletCount;
+        currentWeapon = w;
     }
 
+    public Weapon GetCurrentWeapon() => currentWeapon;
 }
