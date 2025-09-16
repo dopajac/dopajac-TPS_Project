@@ -6,11 +6,11 @@ using Unity.Cinemachine;
 public class AimZoomHandler : MonoBehaviour
 {
     [Header("Input")]
-    public InputActionReference aimAction; // Player/Aim 액션
+    public InputActionReference aimAction;
 
     [Header("Cams")]
-    public Cinemachine3rdPersonFollow baseCam_cm; // 기본 카메라 follow component
-    public CinemachineVirtualCamera   aimCam;     // ADS 카메라
+    public Cinemachine3rdPersonFollow baseCam_cm;
+    public CinemachineVirtualCamera   aimCam;
 
     [Header("Zoom by Distance (Tap)")]
     public float normalDistance = 4.5f;
@@ -25,19 +25,22 @@ public class AimZoomHandler : MonoBehaviour
 
     [Header("Refs")]
     public StarterAssets.StarterAssetsInputs input;
-    public Weapon currentWeapon; // 현재 무기(스코프 확인용)
+    public Weapon currentWeapon;                  // optional direct reference
+    [SerializeField] private WeaponHolder holder; // preferred
 
     private bool zoomOn;
     private bool isAiming;
 
-    private void OnEnable() {
+    private void OnEnable()
+    {
         var a = aimAction.action;
         a.Enable();
         a.started   += OnStarted;
         a.performed += OnPerformed;
         a.canceled  += OnCanceled;
     }
-    private void OnDisable() {
+    private void OnDisable()
+    {
         var a = aimAction.action;
         a.started   -= OnStarted;
         a.performed -= OnPerformed;
@@ -47,11 +50,31 @@ public class AimZoomHandler : MonoBehaviour
 
     private void Start()
     {
+        if (!holder) holder = GetComponentInParent<WeaponHolder>();
+        if (!currentWeapon && holder) currentWeapon = holder.CurrentWeapon;
+
+        if (holder) holder.OnWeaponSwitched += OnWeaponSwitched;
+
         ApplyDistance();
         ApplyFov(fovHip);
     }
 
+    private void OnDestroy()
+    {
+        if (holder) holder.OnWeaponSwitched -= OnWeaponSwitched;
+    }
+
+    private void OnWeaponSwitched(int slot, Weapon w)
+    {
+        currentWeapon = w;
+        if (isAiming)
+        {
+            ApplyFov(GetScopeFov());
+        }
+    }
+
     private void OnStarted(InputAction.CallbackContext ctx) { }
+
     private void OnPerformed(InputAction.CallbackContext ctx)
     {
         if (ctx.interaction is TapInteraction)
@@ -63,12 +86,11 @@ public class AimZoomHandler : MonoBehaviour
         {
             isAiming = true;
             if (input) input.aim = true;
-            aimCam.gameObject.SetActive(true);
-            ApplyFov( GetScopeFov() );
+            if (aimCam) aimCam.gameObject.SetActive(true);
+            ApplyFov(GetScopeFov());
         }
         else
         {
-            // 인터랙션 미설정 시 Tap처럼
             zoomOn = !zoomOn;
             ApplyDistance();
         }
@@ -80,7 +102,7 @@ public class AimZoomHandler : MonoBehaviour
         {
             isAiming = false;
             if (input) input.aim = false;
-            aimCam.gameObject.SetActive(false);
+            if (aimCam) aimCam.gameObject.SetActive(false);
             ApplyFov(fovHip);
         }
     }
@@ -92,8 +114,11 @@ public class AimZoomHandler : MonoBehaviour
 
     private float GetScopeFov()
     {
-        if (!currentWeapon) return fovHip;
-        switch (currentWeapon.GetCurrentScope())
+        var w = currentWeapon;
+        if (!w && holder) w = holder.CurrentWeapon;
+        if (!w) return fovHip;
+
+        switch (w.GetCurrentScope())
         {
             case ScopeKind.RedDot: return fovDot;
             case ScopeKind.X2:     return fov2x;

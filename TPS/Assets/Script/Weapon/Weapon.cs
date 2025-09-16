@@ -8,7 +8,7 @@ public abstract class Weapon : MonoBehaviour
 
     [Header("Base Stats")]
     [SerializeField] protected float baseDamage = 30f;
-    [SerializeField] protected float baseBulletSpeed = 800f; // m/s 가정
+    [SerializeField] protected float baseBulletSpeed = 800f;
     [SerializeField] protected float baseRecoil = 1f;
     [SerializeField] protected float baseSpread = 1f;
     [SerializeField] protected int   baseMagCapacity = 30;
@@ -23,7 +23,7 @@ public abstract class Weapon : MonoBehaviour
     [SerializeField] protected Transform weaponClipPoint;
     [SerializeField] protected GameObject weaponClipFX;
     [SerializeField] protected LayerMask hitLayerMask = ~0;
-    public Transform BulletPoint => bulletPoint;
+
     [Header("Sockets (child transforms)")]
     [SerializeField] protected Transform scopeSocket;
     [SerializeField] protected Transform muzzleSocket;
@@ -34,6 +34,8 @@ public abstract class Weapon : MonoBehaviour
     [Header("Allowed Slots")]
     [SerializeField] protected List<AttachmentSlot> allowedSlots = new();
 
+    public bool CanShootNow => fireCooldown <= 0f && currentAmmo > 0;
+    
     // runtime stats
     protected float damage, bulletSpeed, recoil, spread;
     protected int   magCapacity;
@@ -42,8 +44,6 @@ public abstract class Weapon : MonoBehaviour
 
     protected Dictionary<AttachmentSlot, AttachmentSO> equipped = new();
     protected Dictionary<AttachmentSlot, GameObject> spawnedViews = new();
-
-    public bool CanShootNow => fireCooldown <= 0f && currentAmmo > 0;
 
     protected virtual void Awake()
     {
@@ -142,52 +142,32 @@ public abstract class Weapon : MonoBehaviour
         return null;
     }
 
-    // 기본: 총구에서 발사
+    // === Fire / Reload API (PlayerManager에서 호출) ===
     public bool TryShoot(Vector3 worldTarget)
     {
-        return TryShootFrom(bulletPoint ? bulletPoint.position : transform.position, worldTarget);
-    }
-
-    // ADS 시: 카메라 중앙(origin)에서 발사도 가능
-    public bool TryShootFrom(Vector3 origin, Vector3 worldTarget)
-    {
         if (fireCooldown > 0f) return false;
-        if (currentAmmo <= 0)  return false;
+        if (currentAmmo <= 0) return false;
 
         currentAmmo--;
         fireCooldown = 1f / Mathf.Max(0.01f, shotsPerSecond);
 
-        Vector3 dir = (worldTarget - origin).normalized;
-        //Debug.DrawRay(origin, dir * 5f, Color.yellow, 1f, false); // 길이 5m, 1초 유지
-        
-        // FX (소염/소음 체크로 억제 가능)
-        if (!IsFlashSuppressed())
-        {
-            if (weaponFlashFX && bulletPoint) Instantiate(weaponFlashFX, bulletPoint.position, bulletPoint.rotation);
-            if (bulletCaseFX && bulletCasePoint) Instantiate(bulletCaseFX, bulletCasePoint.position, bulletCasePoint.rotation);
-        }
+        // fx
+        if (bulletCaseFX && bulletCasePoint) Instantiate(bulletCaseFX, bulletCasePoint.position, bulletCasePoint.rotation);
+        if (weaponFlashFX && bulletPoint)    Instantiate(weaponFlashFX, bulletPoint.position, bulletPoint.rotation);
 
-        if (bulletPrefab)
+        // projectile
+        if (bulletPrefab && bulletPoint)
         {
-            var go = Instantiate(bulletPrefab, origin, Quaternion.LookRotation(dir, Vector3.up));
+            Vector3 aim = (worldTarget - bulletPoint.position).normalized;
+            var go = Instantiate(bulletPrefab, bulletPoint.position, Quaternion.LookRotation(aim, Vector3.up));
             var rb = go.GetComponent<Rigidbody>();
-            if (rb) rb.AddForce(dir * bulletSpeed, ForceMode.VelocityChange);
+            if (rb)
+            {
+                rb.linearVelocity = aim * bulletSpeed * 0.01f; // bulletSpeed가 m/s라면 스케일 맞춰 조정
+            }
         }
+
         return true;
-    }
-
-    protected bool IsFlashSuppressed()
-    {
-        foreach (var a in equipped.Values)
-            if (a.suppressFlash) return true;
-        return false;
-    }
-
-    protected bool IsSoundSuppressed()
-    {
-        foreach (var a in equipped.Values)
-            if (a.suppressSound) return true;
-        return false;
     }
 
     public void Reload()
@@ -198,11 +178,4 @@ public abstract class Weapon : MonoBehaviour
 
     public int CurrentAmmo => currentAmmo;
     public int MagCapacity => magCapacity;
-
-    private void OnValidate()
-    {
-        shotsPerSecond = Mathf.Max(0.01f, shotsPerSecond);
-        baseMagCapacity = Mathf.Max(1, baseMagCapacity);
-        baseBulletSpeed = Mathf.Max(0f, baseBulletSpeed);
-    }
 }
