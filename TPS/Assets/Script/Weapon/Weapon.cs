@@ -155,16 +155,39 @@ public abstract class Weapon : MonoBehaviour
         if (bulletCaseFX && bulletCasePoint) Instantiate(bulletCaseFX, bulletCasePoint.position, bulletCasePoint.rotation);
         if (weaponFlashFX && bulletPoint)    Instantiate(weaponFlashFX, bulletPoint.position, bulletPoint.rotation);
 
-        // projectile
+        // === Spread (탄퍼짐) 적용 ===
+        Vector3 aimDir = (worldTarget - bulletPoint.position).normalized;
+
+        // 탄퍼짐을 구면 랜덤으로 추가
+        if (spread > 0f)
+        {
+            // 작은 원뿔 범위 내에서 랜덤한 방향
+            float spreadAngle = spread; // degree 단위로 쓴다고 가정
+            aimDir = Quaternion.Euler(
+                UnityEngine.Random.Range(-spreadAngle, spreadAngle),
+                UnityEngine.Random.Range(-spreadAngle, spreadAngle),
+                0f
+            ) * aimDir;
+        }
+
+        // === Projectile 생성 ===
         if (bulletPrefab && bulletPoint)
         {
-            Vector3 aim = (worldTarget - bulletPoint.position).normalized;
-            var go = Instantiate(bulletPrefab, bulletPoint.position, Quaternion.LookRotation(aim, Vector3.up));
+            var go = Instantiate(bulletPrefab, bulletPoint.position, Quaternion.LookRotation(aimDir, Vector3.up));
             var rb = go.GetComponent<Rigidbody>();
             if (rb)
             {
-                rb.linearVelocity = aim * bulletSpeed * 0.01f; // bulletSpeed가 m/s라면 스케일 맞춰 조정
+                rb.linearVelocity = aimDir * bulletSpeed * 0.01f;
             }
+        }
+
+        // === Recoil (반동) 적용 ===
+        if (recoil > 0f && Camera.main != null)
+        {
+            // 간단하게 카메라 pitch를 위로 튕기기
+            // (실제로는 PlayerManager에 연결된 CameraController에 hook해서 처리하는 게 더 자연스러움)
+            Transform cam = Camera.main.transform;
+            cam.rotation *= Quaternion.Euler(-recoil, 0f, 0f); 
         }
 
         return true;
