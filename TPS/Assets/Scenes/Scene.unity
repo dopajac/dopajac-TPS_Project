@@ -810,6 +810,17 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &499041361 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 4344986812279348465, guid: d84df8b3a2c49a04e832ba6152414fc5, type: 3}
+  m_PrefabInstance: {fileID: 273336488}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 342f6749aa5b197489f8792fb4db158e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Shotgun
 --- !u!1 &531675830
 GameObject:
   m_ObjectHideFlags: 0
@@ -1457,6 +1468,17 @@ MonoBehaviour:
       x: 1
       y: 1
       z: 1
+--- !u!114 &1191117086 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 1729997232202487524, guid: fb8b17526bd01d04b83858ea8bac29dd, type: 3}
+  m_PrefabInstance: {fileID: 764027175}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 45b75c11089b8e04bb06d5158b1015df, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::Rifle
 --- !u!1 &1352227427
 GameObject:
   m_ObjectHideFlags: 0
@@ -5519,9 +5541,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeaponHolder
   slots:
-  - {fileID: 0}
-  - {fileID: 0}
-  activeSlot: -1
+  - {fileID: 1191117086}
+  - {fileID: 499041361}
+  activeSlot: 0
   bulletCountText: {fileID: 107159736}
 --- !u!4 &7342604352046256310
 Transform:
