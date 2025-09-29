@@ -62,6 +62,8 @@ public class WeaponHolder : MonoBehaviour
 
         activeSlot = (slots[slotIndex] != null) ? slotIndex : -1;
         UpdateActiveVisibility();
+
+        // 무기가 있으면 그대로, 없으면 null 전달
         OnWeaponSwitched?.Invoke(activeSlot, CurrentWeapon);
     }
 

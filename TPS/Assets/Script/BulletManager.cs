@@ -31,11 +31,12 @@ public class BulletManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        if (other.CompareTag("Bullet")) return; // 서로 무시
         DestroyBullet();
     }
 
     private void DestroyBullet()
     {
-        Destroy(gameObject);
+       Destroy(gameObject);
     }
 }

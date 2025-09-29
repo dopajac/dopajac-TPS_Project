@@ -4,6 +4,10 @@ public class Rifle : Weapon
 {
     protected override void Awake()
     {
+       
+
+            
+        
         weaponType = WeaponType.Rifle;
         allowedSlots = new List<AttachmentSlot>
         {
@@ -14,4 +18,6 @@ public class Rifle : Weapon
         baseBulletSpeed = 900f;
         base.Awake();
     }
+
+    
 }

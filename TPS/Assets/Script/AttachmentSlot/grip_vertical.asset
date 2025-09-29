@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: ee7d89052b615b344b544fc518a0ffa6, type: 3}
-  m_Name: grip_vertical 2
+  m_Name: grip_vertical
   m_EditorClassIdentifier: Assembly-CSharp::AttachmentSO
   id: grip_vertical
   slot: 2

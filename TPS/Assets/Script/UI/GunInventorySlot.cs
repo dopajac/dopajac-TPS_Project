@@ -5,36 +5,71 @@ using UnityEngine.UI;
 public class GunInventorySlot : MonoBehaviour, IDropHandler
 {
     [Header("UI 연결")]
-    //public RawImage renderImage;   // 이 슬롯의 WeaponPreview RawImage
+    public int slotIndex; // 0 = 무기1, 1 = 무기2
 
+    [SerializeField] private AttachmentPanelController attachmentPanel; // 슬롯별 패널 연결
+    
+    
     private Camera renderCamera;
     private GameObject previewInstance;
     private RenderTexture rt;
     private Transform previewRoot;
 
     private WeaponData equippedWeapon;
+    private WeaponHolder playerWeaponHolder;
+
+    private void Awake()
+    {
+        // 플레이어의 WeaponHolder 찾기 (씬 안에 하나 있다고 가정)
+        playerWeaponHolder = FindObjectOfType<WeaponHolder>();
+    }
 
     public void OnDrop(PointerEventData eventData)
     {
         if (DragDropManager.draggedWeapon != null && DragDropManager.draggedPreview != null)
         {
-            // Preview를 이 슬롯 밑으로 이동
-            DragDropManager.draggedPreview.transform.SetParent(transform, false);
+            // 기존 프리뷰 삭제
+            if (previewInstance != null) Destroy(previewInstance);
 
-            // 위치 중앙 정렬
-            DragDropManager.draggedPreview.rectTransform.anchoredPosition = Vector2.zero;
+            // 드래그된 프리뷰를 슬롯에 붙임
+            previewInstance = DragDropManager.draggedPreview.gameObject;
+            previewInstance.transform.SetParent(transform, false);
+            previewInstance.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
 
-            // Slot의 renderImage 갱신
-            //renderImage = DragDropManager.draggedPreview;
-
-            // 장착 무기 데이터 저장
             equippedWeapon = DragDropManager.draggedWeapon;
+            Debug.Log($"{gameObject.name} 슬롯에 {equippedWeapon.weaponType} 장착됨 (UI)");
 
-            Debug.Log($"{gameObject.name} 슬롯에 {equippedWeapon.weaponName} 장착됨");
+            EquipToPlayer(equippedWeapon);
 
-            // 드래그 매니저 정리
             DragDropManager.draggedPreview = null;
             DragDropManager.draggedWeapon = null;
+        }
+    }
+
+
+    private void EquipToPlayer(WeaponData weaponData)
+    {
+        if (!playerWeaponHolder) return;
+
+        if (attachmentPanel) 
+            attachmentPanel.RefreshUI(weaponData.weaponType);
+
+        // 이미 있던 무기 제거
+        Weapon old = playerWeaponHolder.GetWeapon(slotIndex);
+        if (old) Destroy(old.gameObject);
+
+        // Player에 무기 생성
+        GameObject weaponObj = Instantiate(weaponData.prefab, playerWeaponHolder.transform);
+        Weapon weaponComp = weaponObj.GetComponent<Weapon>();
+
+        if (weaponComp != null)
+        {
+            playerWeaponHolder.SetWeapon(slotIndex, weaponComp);
+            Debug.Log($"플레이어 {slotIndex}번 슬롯에 {weaponData.weaponName}({weaponData.weaponType}) 장착됨");
+        }
+        else
+        {
+            Debug.LogError($"{weaponData.prefab.name} 프리팹에 Weapon 컴포넌트가 없음!");
         }
     }
 
@@ -42,9 +77,14 @@ public class GunInventorySlot : MonoBehaviour, IDropHandler
     {
         equippedWeapon = weaponData;
 
+        // 기존 프리뷰 제거
+        if (previewInstance != null)
+        {
+            Destroy(previewInstance);
+            previewInstance = null;
+        }
         // RenderTexture 새로 생성
         rt = new RenderTexture(512, 512, 16);
-        //renderImage.texture = rt;
 
         // 카메라 생성
         if (renderCamera == null)
@@ -88,7 +128,7 @@ public class GunInventorySlot : MonoBehaviour, IDropHandler
         // 카메라 무기를 바라보게
         renderCamera.transform.LookAt(previewRoot.position);
 
-        Debug.Log($"{gameObject.name} 슬롯에 {equippedWeapon.weaponName} 장착됨");
+        Debug.Log($"{gameObject.name} 슬롯 UI에 {equippedWeapon.weaponName} 프리뷰 생성됨");
     }
 
     private void SetLayerRecursively(GameObject obj, int layer)

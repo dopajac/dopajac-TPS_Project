@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1398438621529578388}
   - component: {fileID: 1372878708264115118}
   - component: {fileID: 1380871174250475464}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Wep_Shotgun_01_Trigger_02
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -100,7 +100,7 @@ GameObject:
   - component: {fileID: 1402764217622781980}
   - component: {fileID: 1373224385055195164}
   - component: {fileID: 1380899010662009248}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Wep_Shotgun_01_Barrel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -191,7 +191,7 @@ GameObject:
   - component: {fileID: 1381194236059955104}
   - component: {fileID: 1413415956466621750}
   - component: {fileID: 1413629547123549738}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Wep_Shotgun_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -327,7 +327,7 @@ GameObject:
   - component: {fileID: 1402411804195267314}
   - component: {fileID: 1369109351147924318}
   - component: {fileID: 1381049862023250896}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: SM_Wep_Shotgun_01_Trigger_01
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -415,7 +415,7 @@ GameObject:
   m_Component:
   - component: {fileID: 8830913827230906732}
   - component: {fileID: 4344986812279348465}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Shotgun
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -431,7 +431,7 @@ Transform:
   m_GameObject: {fileID: 1469391370918156108}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.02432, y: 0.00228, z: 0.1798}
+  m_LocalPosition: {x: 67.590004, y: 0.652, z: 0.2}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -457,13 +457,13 @@ MonoBehaviour:
   baseSpread: 2.5
   baseMagCapacity: 8
   shotsPerSecond: 1.5
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 5341742223406746680, guid: 20cae09a36ae9014cae57a8a152a1800, type: 3}
   bulletPoint: {fileID: 0}
-  weaponFlashFX: {fileID: 0}
+  weaponFlashFX: {fileID: 3054710423376930101, guid: 560d801478df6014d938dc15d530d984, type: 3}
   bulletCasePoint: {fileID: 0}
-  bulletCaseFX: {fileID: 0}
+  bulletCaseFX: {fileID: 1375967352616856002, guid: aa57242c845148a4eb27d9caea488b85, type: 3}
   weaponClipPoint: {fileID: 0}
-  weaponClipFX: {fileID: 0}
+  weaponClipFX: {fileID: 1375967352616856002, guid: 21d6d4ff20c95654c80ed28ec0931700, type: 3}
   hitLayerMask:
     serializedVersion: 2
     m_Bits: 4294967295

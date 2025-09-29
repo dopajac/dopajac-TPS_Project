@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 [CreateAssetMenu(menuName = "Weapon Data")]
@@ -7,4 +8,5 @@ public class WeaponData : ScriptableObject
     public GameObject prefab;
     public Vector3 previewRotation;
     public Vector3 previewScale = Vector3.one;
+    public WeaponType weaponType;
 }

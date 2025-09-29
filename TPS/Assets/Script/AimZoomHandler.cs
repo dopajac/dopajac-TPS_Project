@@ -9,6 +9,7 @@ public class AimZoomHandler : MonoBehaviour
     public InputActionReference aimAction;
 
     [Header("Cams")]
+    public CinemachineVirtualCamera followCam;
     public Cinemachine3rdPersonFollow baseCam_cm;
     public CinemachineVirtualCamera   aimCam;
 
@@ -79,18 +80,33 @@ public class AimZoomHandler : MonoBehaviour
     {
         if (ctx.interaction is TapInteraction)
         {
+            // 줌 토글
             zoomOn = !zoomOn;
             ApplyDistance();
+
+            if (zoomOn)
+            {
+                ApplyFov(GetScopeFov());  // 배율 적용
+                Debug.Log("[AimZoomHandler] Tap Zoom ON, FOV=" + followCam.m_Lens.FieldOfView);
+            }
+            else
+            {
+                ApplyFov(fovHip);        // 힙 파이어 상태
+                Debug.Log("[AimZoomHandler] Tap Zoom OFF, FOV=" + followCam.m_Lens.FieldOfView);
+            }
         }
         else if (ctx.interaction is HoldInteraction)
         {
+            // 견착 시작
             isAiming = true;
             if (input) input.aim = true;
             if (aimCam) aimCam.gameObject.SetActive(true);
             ApplyFov(GetScopeFov());
+            Debug.Log("[AimZoomHandler] Hold ADS, FOV=" + followCam.m_Lens.FieldOfView);
         }
         else
         {
+            // 기타 인터랙션 → Tap처럼 처리
             zoomOn = !zoomOn;
             ApplyDistance();
         }
@@ -102,7 +118,6 @@ public class AimZoomHandler : MonoBehaviour
         {
             isAiming = false;
             if (input) input.aim = false;
-            if (aimCam) aimCam.gameObject.SetActive(false);
             ApplyFov(fovHip);
         }
     }
@@ -130,6 +145,14 @@ public class AimZoomHandler : MonoBehaviour
 
     private void ApplyFov(float fov)
     {
-        if (aimCam) aimCam.m_Lens.FieldOfView = fov;
+        if (followCam)
+        {
+            followCam.m_Lens.FieldOfView = fov;
+            Debug.Log($"[AimZoomHandler] ApplyFov: {fov}");
+        }
+        else
+        {
+            Debug.LogWarning("[AimZoomHandler] followCam이 비어있음!");
+        }
     }
 }

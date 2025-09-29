@@ -33,6 +33,10 @@ public abstract class Weapon : MonoBehaviour
 
     [Header("Allowed Slots")]
     [SerializeField] protected List<AttachmentSlot> allowedSlots = new();
+    
+    [Header("=== 테스트 전용 ===")]
+    [SerializeField] private AttachmentSO testAttachment; // 플레이 모드에서 드래그해서 넣을 SO
+    private AttachmentSO _lastTestAttachment;
 
     public bool CanShootNow => fireCooldown <= 0f && currentAmmo > 0;
     
@@ -47,6 +51,15 @@ public abstract class Weapon : MonoBehaviour
 
     protected virtual void Awake()
     {
+        if (!bulletPoint)
+            bulletPoint = FindInScene("BulletPoint");
+
+        if (!bulletCasePoint)
+            bulletCasePoint = FindInScene("BulletCasePoint");
+
+        if (!weaponClipPoint)
+            weaponClipPoint = FindInScene("ClipPoint");
+        
         ResetStats();
         currentAmmo = magCapacity;
     }
@@ -54,6 +67,18 @@ public abstract class Weapon : MonoBehaviour
     protected virtual void Update()
     {
         if (fireCooldown > 0f) fireCooldown -= Time.deltaTime;
+
+        // 플레이 모드에서 testAttachment 바뀌면 자동 장착
+        if (Application.isPlaying && testAttachment != _lastTestAttachment)
+        {
+            _lastTestAttachment = testAttachment;
+
+            if (_lastTestAttachment != null)
+            {
+                Equip(_lastTestAttachment);   // 효과만 반영됨 (viewPrefab null이면 외형은 안 바뀜)
+                Debug.Log($"[테스트] {_lastTestAttachment.id} 장착됨: Damage={damage}, Mag={magCapacity}");
+            }
+        }
     }
 
     protected void ResetStats()
@@ -143,7 +168,7 @@ public abstract class Weapon : MonoBehaviour
     }
 
     // === Fire / Reload API (PlayerManager에서 호출) ===
-    public bool TryShoot(Vector3 worldTarget)
+    public virtual bool TryShoot(Vector3 worldTarget)
     {
         if (fireCooldown > 0f) return false;
         if (currentAmmo <= 0) return false;
@@ -199,6 +224,20 @@ public abstract class Weapon : MonoBehaviour
         currentAmmo = magCapacity;
     }
 
+    private Transform FindInScene(string name)
+    {
+        foreach (var go in GameObject.FindObjectsOfType<Transform>(true))
+        {
+            if (go.name == name)
+                return go;
+        }
+        return null;
+    }
+    public bool AllowedSlotsContains(AttachmentSlot slot)
+    {
+        return allowedSlots.Contains(slot);
+    }
+    
     public int CurrentAmmo => currentAmmo;
     public int MagCapacity => magCapacity;
 }

@@ -16,3 +16,4 @@ MonoBehaviour:
   prefab: {fileID: 5912320523640099140, guid: fb8b17526bd01d04b83858ea8bac29dd, type: 3}
   previewRotation: {x: 0, y: -90, z: 0}
   previewScale: {x: 1, y: 1, z: 1}
+  weaponType: 1
