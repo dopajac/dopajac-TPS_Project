@@ -32,7 +32,7 @@ public class BulletManager : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Bullet")) return; // 서로 무시
+        if (other.CompareTag("Bullet")||other.CompareTag("SpawnArea")) return; // 서로 무시
 
         // === HitBox 검사 ===
         DummyHitBox hitBox = other.GetComponent<DummyHitBox>();

@@ -100,7 +100,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 2
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &446513050445077631
 GameObject:
   m_ObjectHideFlags: 0
@@ -201,7 +201,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 1
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &1339903960119846608
 GameObject:
   m_ObjectHideFlags: 0
@@ -548,7 +548,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 0.7
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &2174495977567143648
 GameObject:
   m_ObjectHideFlags: 0
@@ -714,7 +714,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 0.7
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &2966328089126503571
 GameObject:
   m_ObjectHideFlags: 0
@@ -879,7 +879,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 0.7
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &3108504492835975312
 GameObject:
   m_ObjectHideFlags: 0
@@ -1176,7 +1176,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 0.7
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &3707499413572829192
 GameObject:
   m_ObjectHideFlags: 0
@@ -1310,7 +1310,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 0.7
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &4074199090752280793
 GameObject:
   m_ObjectHideFlags: 0
@@ -1572,7 +1572,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 0.7
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &4972400091127616284
 GameObject:
   m_ObjectHideFlags: 0
@@ -1643,7 +1643,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 0.7
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &5013603326276217170
 GameObject:
   m_ObjectHideFlags: 0
@@ -1686,9 +1686,10 @@ GameObject:
   - component: {fileID: 8465271399783251589}
   - component: {fileID: 602249720303755591}
   - component: {fileID: 2623892062439064435}
+  - component: {fileID: 3716994246830010269}
   m_Layer: 0
   m_Name: Dummy Run
-  m_TagString: Untagged
+  m_TagString: Dummy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -1746,6 +1747,19 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::CircleMove
   radius: 5
   speed: 2
+--- !u!114 &3716994246830010269
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5331918948513855747}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 62bbc808d59646842ae8151fe23d9ce8, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::DummyHealth
+  maxHealth: 100
 --- !u!1 &5790199185131165191
 GameObject:
   m_ObjectHideFlags: 0
@@ -1943,7 +1957,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 1
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &6841291698191153713
 GameObject:
   m_ObjectHideFlags: 0
@@ -2045,7 +2059,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::DummyHitBox
   damageMultiplier: 0.7
-  targetHealth: {fileID: 0}
+  targetHealth: {fileID: 3716994246830010269}
 --- !u!1 &7214846384091348483
 GameObject:
   m_ObjectHideFlags: 0

@@ -24,6 +24,7 @@ public class DummyHealth : MonoBehaviour
     void Die()
     {
         Debug.Log($"{gameObject.name} 사망!");
+        Destroy(gameObject);
         // 죽는 애니메이션 or 리스폰 처리
     }
 }
