@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: 7337853652872860123}
   - component: {fileID: 7591950590101497690}
   - component: {fileID: 3788589786047892950}
+  - component: {fileID: 1263783518647165701}
   m_Layer: 0
   m_Name: Target
   m_TagString: Untagged
@@ -105,6 +106,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ShootingTargetScore
   centerPoint: {fileID: 4395312889637131261}
+--- !u!114 &1263783518647165701
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 34177310195826001}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeabba2609f555c4998cd16bb20f64ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShootingTargetMove
+  startPoint: {fileID: 6905541197768151709}
+  controlPoint: {fileID: 1230750970694622516}
+  endPoint: {fileID: 2425203466712611878}
+  moveSpeed: 1
 --- !u!1 &2517771040523876195
 GameObject:
   m_ObjectHideFlags: 0
@@ -207,7 +224,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 5930045319445731531}
-  - component: {fileID: 5319278861294797038}
   m_Layer: 0
   m_Name: ShootingTarget_Move
   m_TagString: ShootingTarget
@@ -234,22 +250,6 @@ Transform:
   - {fileID: 1230750970694622516}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &5319278861294797038
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7000534313216938703}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: aeabba2609f555c4998cd16bb20f64ac, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::ShootingTargetMove
-  startPoint: {fileID: 6905541197768151709}
-  controlPoint: {fileID: 1230750970694622516}
-  endPoint: {fileID: 2425203466712611878}
-  moveSpeed: 1
 --- !u!1 &7236471063896689719
 GameObject:
   m_ObjectHideFlags: 0

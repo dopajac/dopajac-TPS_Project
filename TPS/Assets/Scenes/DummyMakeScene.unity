@@ -592,6 +592,16 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6ecedd2ea73f796458977f02d89facb9, type: 3}
+--- !u!4 &4247382526145083728 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 6905541197768151709, guid: bee48dc3c748e4340b8630da2d1d211e, type: 3}
+  m_PrefabInstance: {fileID: 7288181847838682061}
+  m_PrefabAsset: {fileID: 0}
+--- !u!4 &4939568574582527979 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 2425203466712611878, guid: bee48dc3c748e4340b8630da2d1d211e, type: 3}
+  m_PrefabInstance: {fileID: 7288181847838682061}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &6881590630669364125
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -802,11 +812,36 @@ PrefabInstance:
       propertyPath: m_Name
       value: ShootingTarget_Move
       objectReference: {fileID: 0}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5319278861294797038, guid: bee48dc3c748e4340b8630da2d1d211e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 34177310195826001, guid: bee48dc3c748e4340b8630da2d1d211e, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 7304203986583049885}
   m_SourcePrefab: {fileID: 100100000, guid: bee48dc3c748e4340b8630da2d1d211e, type: 3}
+--- !u!1 &7304203986583049884 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 34177310195826001, guid: bee48dc3c748e4340b8630da2d1d211e, type: 3}
+  m_PrefabInstance: {fileID: 7288181847838682061}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &7304203986583049885
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7304203986583049884}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aeabba2609f555c4998cd16bb20f64ac, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::ShootingTargetMove
+  startPoint: {fileID: 4247382526145083728}
+  controlPoint: {fileID: 8372283766112499449}
+  endPoint: {fileID: 4939568574582527979}
+  moveSpeed: 1
 --- !u!1001 &7405654603479659899
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1037,6 +1072,11 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3c3eef40c69a14e4bbc3f1d69e784785, type: 3}
+--- !u!4 &8372283766112499449 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 1230750970694622516, guid: bee48dc3c748e4340b8630da2d1d211e, type: 3}
+  m_PrefabInstance: {fileID: 7288181847838682061}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
