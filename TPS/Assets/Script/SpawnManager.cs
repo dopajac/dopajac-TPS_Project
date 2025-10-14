@@ -1,25 +1,17 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
 
 public class SpawnManager : MonoBehaviour
 {
+    [Header("Spawn Settings")]
     [SerializeField] private List<GameObject> spawnPlayersPoint;
-    [SerializeField] private int roomnumber;
-
-    private Rigidbody rb;
+    [SerializeField] private Transform moveTarget;  // 이동할 실제 타깃 (PlayerArmature 등)
+    [SerializeField] private Rigidbody rb;
 
     private void Awake()
     {
-        rb = GetComponent<Rigidbody>(); // Player에 붙은 Rigidbody 가져오기
-    }
-
-    private void Update()
-    {
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            SetPlayerSpawn(roomnumber);
-        }
+        if (!moveTarget) moveTarget = transform;
+        if (!rb) rb = GetComponent<Rigidbody>();
     }
 
     public void SetPlayerSpawn(int RoomNumber)
@@ -30,19 +22,28 @@ public class SpawnManager : MonoBehaviour
             return;
         }
 
-        Vector3 spawnPos = spawnPlayersPoint[RoomNumber].transform.position;
+        Vector3 spawnPos = spawnPlayersPoint[RoomNumber].transform.position + Vector3.up * 0.05f;
+        Debug.Log($"[SpawnManager] 이동 시도 → {spawnPos}");
 
-        if (rb != null)
+        var cc = moveTarget.GetComponent<CharacterController>();
+        if (cc)
         {
-            // ✅ Rigidbody가 있을 때는 MovePosition으로 이동
-            rb.MovePosition(spawnPos);
+            cc.enabled = false;
+            moveTarget.position = spawnPos;
+            cc.enabled = true;
+        }
+        else if (rb != null)
+        {
+            rb.isKinematic = true;
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            rb.position = spawnPos;
         }
         else
         {
-            // Rigidbody 없으면 일반 이동
-            transform.position = spawnPos;
+            moveTarget.position = spawnPos;
         }
 
-        Debug.Log($"플레이어 이동 완료 → Room: {RoomNumber}, 위치: {spawnPos}");
+        Debug.Log($"[SpawnManager] 이동 완료 → Room: {RoomNumber}");
     }
 }
