@@ -24,7 +24,17 @@ public class DummyHealth : MonoBehaviour
     void Die()
     {
         Debug.Log($"{gameObject.name} 사망!");
+        if (ScoreManager.Instance != null)
+        {
+            ScoreManager.Instance.AddDummyScore(1);
+            Debug.Log($"Dummy Score +{1}! 현재 총 점수: {ScoreManager.Instance.Dummy_Score}");
+        }
+        else
+        {
+            Debug.LogWarning("ScoreManager 인스턴스를 찾을 수 없습니다!");
+        }
         Destroy(gameObject);
+        
         // 죽는 애니메이션 or 리스폰 처리
     }
 }

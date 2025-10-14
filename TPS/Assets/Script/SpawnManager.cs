@@ -8,6 +8,10 @@ public class SpawnManager : MonoBehaviour
     [SerializeField] private Transform moveTarget;  // 이동할 실제 타깃 (PlayerArmature 등)
     [SerializeField] private Rigidbody rb;
 
+    [Header("UI 텍스트")]
+    [SerializeField] private GameObject dummyScoreText;
+    [SerializeField] private GameObject targetScoreText;
+    
     private void Awake()
     {
         if (!moveTarget) moveTarget = transform;
@@ -35,13 +39,34 @@ public class SpawnManager : MonoBehaviour
         else if (rb != null)
         {
             rb.isKinematic = true;
-            rb.velocity = Vector3.zero;
+            rb.linearVelocity = Vector3.zero;
             rb.angularVelocity = Vector3.zero;
             rb.position = spawnPos;
         }
         else
         {
             moveTarget.position = spawnPos;
+        }
+
+        // ✅ 점수 텍스트 활성화 로직
+        if (RoomNumber == 0 || RoomNumber == 1 || RoomNumber == 4)
+        {
+            dummyScoreText.SetActive(true);
+            targetScoreText.SetActive(false);
+            Debug.Log("Dummy Score UI 활성화");
+        }
+        else if (RoomNumber == 2 || RoomNumber == 3)
+        {
+            dummyScoreText.SetActive(false);
+            targetScoreText.SetActive(true);
+            Debug.Log("Target Score UI 활성화");
+        }
+        else
+        
+        {
+            // 예외 처리 (모두 끄기)
+            dummyScoreText.SetActive(false);
+            targetScoreText.SetActive(false);
         }
 
         Debug.Log($"[SpawnManager] 이동 완료 → Room: {RoomNumber}");
