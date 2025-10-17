@@ -34,7 +34,7 @@ public class WeaponHolder : MonoBehaviour
         if (!bulletCountText) return;
 
         if (CurrentWeapon)
-            bulletCountText.text = CurrentWeapon.CurrentAmmo + " / " + CurrentWeapon.MagCapacity;
+            bulletCountText.text = $"{CurrentWeapon.CurrentAmmo} / {CurrentWeapon.MagCapacity}";
         else
             bulletCountText.text = "-- / --";
     }
@@ -44,7 +44,9 @@ public class WeaponHolder : MonoBehaviour
         if (slotIndex < 0 || slotIndex >= slots.Length) return;
         slots[slotIndex] = w;
 
-        if (w) w.gameObject.SetActive(false);
+        // UIWeapon은 건드리지 않음
+        if (w && w.gameObject.layer != LayerMask.NameToLayer("UIWeapon"))
+            w.gameObject.SetActive(false);
 
         if (activeSlot == -1 && w != null)
             SwitchTo(slotIndex);
@@ -62,9 +64,9 @@ public class WeaponHolder : MonoBehaviour
 
         activeSlot = (slots[slotIndex] != null) ? slotIndex : -1;
         UpdateActiveVisibility();
-
-        // 무기가 있으면 그대로, 없으면 null 전달
         OnWeaponSwitched?.Invoke(activeSlot, CurrentWeapon);
+
+        Debug.Log($"[WeaponHolder] 현재 무기 전환됨 → Slot {activeSlot}, {CurrentWeapon?.name ?? "None"}");
     }
 
     public void GoUnarmed()
@@ -98,12 +100,14 @@ public class WeaponHolder : MonoBehaviour
 
     private void UpdateActiveVisibility()
     {
+        // 🔥 여기 핵심: 현재 슬롯만 켜고 나머지는 끈다
         for (int i = 0; i < slots.Length; i++)
         {
-            if (!slots[i]) continue;
+            if (slots[i] == null) continue;
             bool active = (i == activeSlot);
             slots[i].gameObject.SetActive(active);
         }
+
         UpdateAmmoUI();
     }
 }

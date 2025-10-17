@@ -51,26 +51,36 @@ public class GunInventorySlot : MonoBehaviour, IDropHandler
     {
         if (!playerWeaponHolder) return;
 
-        if (attachmentPanel) 
-            attachmentPanel.RefreshUI(weaponData.weaponType);
+        // ✅ weaponData를 직접 넘겨서 타입으로 탐색
+        Weapon found = FindWeaponInScene(weaponData);
+        if (found == null)
+        {
+            Debug.LogError($"씬 안에서 {weaponData.weaponName} 오브젝트를 찾을 수 없음!");
+            return;
+        }
 
-        // 이미 있던 무기 제거
         Weapon old = playerWeaponHolder.GetWeapon(slotIndex);
-        if (old) Destroy(old.gameObject);
+        if (old) old.gameObject.SetActive(false);
 
-        // Player에 무기 생성
-        GameObject weaponObj = Instantiate(weaponData.prefab, playerWeaponHolder.transform);
-        Weapon weaponComp = weaponObj.GetComponent<Weapon>();
+        playerWeaponHolder.SetWeapon(slotIndex, found);
+        Debug.Log($"플레이어 {slotIndex}번 슬롯에 {weaponData.weaponName} 연결됨 (씬 오브젝트)");
+    }
 
-        if (weaponComp != null)
+// Scene 내 무기 찾기 (이름으로)
+    private Weapon FindWeaponInScene(WeaponData weaponData)
+    {
+        Weapon[] allWeapons = FindObjectsOfType<Weapon>(true);
+        foreach (var w in allWeapons)
         {
-            playerWeaponHolder.SetWeapon(slotIndex, weaponComp);
-            Debug.Log($"플레이어 {slotIndex}번 슬롯에 {weaponData.weaponName}({weaponData.weaponType}) 장착됨");
+            // UIWeapon Layer 제외
+            if (w.gameObject.layer == LayerMask.NameToLayer("UIWeapon"))
+                continue;
+
+            // ✅ weaponType 비교 (정확)
+            if (w.weaponType == weaponData.weaponType)
+                return w;
         }
-        else
-        {
-            Debug.LogError($"{weaponData.prefab.name} 프리팹에 Weapon 컴포넌트가 없음!");
-        }
+        return null;
     }
 
     public void SetWeapon(WeaponData weaponData)

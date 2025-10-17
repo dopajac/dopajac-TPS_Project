@@ -14,5 +14,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::WeaponData
   weaponName: 
   prefab: {fileID: 1469391370918156108, guid: d84df8b3a2c49a04e832ba6152414fc5, type: 3}
-  previewRotation: {x: 0, y: -90, z: 0}
-  previewScale: {x: 1, y: 1, z: 1}
+  previewRotation: {x: 0, y: 90, z: 0}
+  previewScale: {x: 0.15, y: 0.15, z: 0.15}
+  weaponType: 0
