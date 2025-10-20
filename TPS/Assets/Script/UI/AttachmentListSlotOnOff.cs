@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
 public class AttachmentListSlotOnOff : MonoBehaviour
 {
@@ -27,8 +28,22 @@ public class AttachmentListSlotOnOff : MonoBehaviour
     {
         Debug.Log($"{mainButton.name} → {optionName} 선택됨");
 
+        // 현재 클릭된 버튼 가져오기
+        Button clickedButton = EventSystem.current.currentSelectedGameObject?.GetComponent<Button>();
+        if (clickedButton != null)
+        {
+            Image clickedImage = clickedButton.GetComponent<Image>();
+            if (clickedImage != null)
+            {
+                // 🔹 mainButton의 ColorBlock을 수정
+                var colors = mainButton.colors;
+                colors.normalColor = clickedImage.color;  // 선택한 버튼의 색상으로 변경
+                mainButton.colors = colors; // 구조체이므로 다시 할당 필수
+            }
+        }
+
         // TODO: 여기서 WeaponHolder / Weapon 에 옵션 적용
-        // 예: 무기.Euqip(해당 AttachmentSO)
+        // 예: weaponHolder.CurrentWeapon.Attach(AttachmentType.Muzzle, optionName);
 
         if (optionsPanel)
             optionsPanel.SetActive(false); // 선택 후 닫기

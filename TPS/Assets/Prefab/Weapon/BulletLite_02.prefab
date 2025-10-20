@@ -186,7 +186,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::BulletManager
   hitparticle: {fileID: 5024009746357069194, guid: ec3f674830402cc45bce805cf6493db7, type: 3}
-  moveSpeed: 30
+  moveSpeed: 50
   lifeTime: 3
   baseDamage: 30
 --- !u!1 &8087445199789049519

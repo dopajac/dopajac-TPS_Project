@@ -17,7 +17,7 @@ public class DummySpawn : MonoBehaviour
         boxCollider = GetComponent<BoxCollider>();
     }
 
-    private void Start()
+    public void Spawn()
     {
         StartCoroutine(SpawnRoutine());
     }

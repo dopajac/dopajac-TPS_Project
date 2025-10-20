@@ -72,4 +72,16 @@ public class DummyNav : MonoBehaviour
 
         isWaiting = false;
     }
+    public void RestartMovement()
+    {
+        isWaiting = false;
+        currentIndex = 1; // 다시 target1으로 시작
+        if (agent != null && targetPosition1 != null)
+        {
+            agent.SetDestination(targetPosition1.position);
+        }
+
+        if (animator != null)
+            animator.SetBool("Stop", false);
+    }
 }

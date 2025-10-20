@@ -1,13 +1,21 @@
 using UnityEngine;
+using UnityEngine.AI;
+using System.Collections;
 
 public class DummyHealth : MonoBehaviour
 {
+    [Header("Health Settings")]
     public float maxHealth = 100f;
     private float currentHealth;
 
-    void Awake()
+    private NavMeshAgent agent;   // 있을 수도, 없을 수도 있음
+    private DummyNav dummyNav;    // 있을 수도 있음
+
+    private void Awake()
     {
         currentHealth = maxHealth;
+        agent = GetComponent<NavMeshAgent>();
+        dummyNav = GetComponent<DummyNav>();
     }
 
     public void TakeDamage(float amount)
@@ -21,20 +29,42 @@ public class DummyHealth : MonoBehaviour
         }
     }
 
-    void Die()
+    private void Die()
     {
         Debug.Log($"{gameObject.name} 사망!");
+
+        // 점수 추가
         if (ScoreManager.Instance != null)
         {
             ScoreManager.Instance.AddDummyScore(1);
-            Debug.Log($"Dummy Score +{1}! 현재 총 점수: {ScoreManager.Instance.Dummy_Score}");
         }
-        else
+
+        // NavMeshAgent가 있을 때만 이동 정지
+        if (agent != null)
+            agent.isStopped = true;
+
+        // 비활성화 및 리스폰 관리
+        DummyRespawnHelper.Instance.Respawn(this);
+    }
+
+    public void Respawn()
+    {
+        gameObject.SetActive(true);
+        currentHealth = maxHealth;
+
+        // NavMeshAgent가 있을 경우만 속도 2배
+        if (agent != null)
         {
-            Debug.LogWarning("ScoreManager 인스턴스를 찾을 수 없습니다!");
+            agent.isStopped = false;
+            agent.speed *= 2f;
         }
-        Destroy(gameObject);
-        
-        // 죽는 애니메이션 or 리스폰 처리
+
+        // DummyNav가 있을 경우에만 이동 재시작
+        if (dummyNav != null)
+        {
+            dummyNav.RestartMovement();
+        }
+
+        Debug.Log($"{gameObject.name} 부활 완료! (NavMeshAgent 존재: {agent != null})");
     }
 }

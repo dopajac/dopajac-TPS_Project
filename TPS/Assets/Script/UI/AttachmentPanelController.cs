@@ -9,9 +9,20 @@ public class AttachmentPanelController : MonoBehaviour
     public GameObject magPanel;
     public GameObject stockPanel;
 
+    [Header("Refs")]
+    public WeaponHolder holder;  // 플레이어의 WeaponHolder 연결
+    private int activeSlotIndex = -1; // 현재 제어 중인 슬롯 인덱스 (0 or 1)
+    
     /// <summary>
     /// WeaponData.weaponType 에 따라 패널 On/Off
     /// </summary>
+    ///
+    public void SetActiveSlot(int index)
+    {
+        activeSlotIndex = index; // 현재 무기 슬롯 번호 저장
+        Debug.Log($"[AttachmentPanel] 현재 활성 무기 슬롯: {activeSlotIndex}");
+    }
+
     public void RefreshUI(WeaponType type)
     {
         // 기본적으로 전부 끔

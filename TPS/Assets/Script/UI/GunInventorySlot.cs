@@ -51,20 +51,37 @@ public class GunInventorySlot : MonoBehaviour, IDropHandler
     {
         if (!playerWeaponHolder) return;
 
-        // ✅ weaponData를 직접 넘겨서 타입으로 탐색
-        Weapon found = FindWeaponInScene(weaponData);
-        if (found == null)
+        // ✅ 씬 안에서 동일 타입 무기 찾기 (Clone 생성 방지)
+        Weapon foundWeapon = FindWeaponInScene(weaponData);
+        if (foundWeapon == null)
         {
-            Debug.LogError($"씬 안에서 {weaponData.weaponName} 오브젝트를 찾을 수 없음!");
+            Debug.LogError($"씬 안에서 {weaponData.weaponName} 무기를 찾을 수 없습니다!");
             return;
         }
 
+        // 이전 무기 비활성화
         Weapon old = playerWeaponHolder.GetWeapon(slotIndex);
-        if (old) old.gameObject.SetActive(false);
+        if (old != null)
+            old.gameObject.SetActive(false);
 
-        playerWeaponHolder.SetWeapon(slotIndex, found);
-        Debug.Log($"플레이어 {slotIndex}번 슬롯에 {weaponData.weaponName} 연결됨 (씬 오브젝트)");
+        // 새 무기 활성화 후 슬롯 등록
+        foundWeapon.gameObject.SetActive(true);
+        playerWeaponHolder.SetWeapon(slotIndex, foundWeapon);
+
+        Debug.Log($"플레이어 {slotIndex}번 슬롯에 {weaponData.weaponName} 연결됨 (씬 오브젝트 재활용)");
+
+        // ✅ 부착물 패널 갱신
+        if (attachmentPanel != null)
+        {
+            attachmentPanel.SetActiveSlot(slotIndex);
+            attachmentPanel.RefreshUI(weaponData.weaponType);
+        }
+        else
+        {
+            Debug.LogWarning($"GunInventorySlot {slotIndex}: attachmentPanel 연결 안됨!");
+        }
     }
+
 
 // Scene 내 무기 찾기 (이름으로)
     private Weapon FindWeaponInScene(WeaponData weaponData)
