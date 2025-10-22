@@ -30,7 +30,7 @@ public class AimZoomHandler : MonoBehaviour
     [SerializeField] private WeaponHolder holder;
 
     [Header("UI")]
-    public GameObject zoomAimUI;  // 👈 ZoomAim (1) 연결할 곳
+    public GameObject zoomAimUI;
 
     private bool zoomOn;
     private bool isAiming;
@@ -59,26 +59,23 @@ public class AimZoomHandler : MonoBehaviour
     {
         if (ctx.interaction is TapInteraction)
         {
+            // ✅ 탭 시 배율(FOV) 전환만 수행
             zoomOn = !zoomOn;
-            ApplyDistance();
+            ApplyFov(zoomOn ? GetScopeFov() : fovHip);
 
-            // ✅ 오른쪽 클릭 “한 번” 눌렀을 때 UI 토글
+            // UI 토글
             if (zoomAimUI)
                 zoomAimUI.SetActive(zoomOn);
 
-            Debug.Log($"[Zoom] Tap → ZoomAim UI {(zoomOn ? "활성화" : "비활성화")}");
+            Debug.Log($"[Zoom] Tap → 배율 {(zoomOn ? "적용" : "해제")}");
         }
         else if (ctx.interaction is HoldInteraction)
         {
+            // ✅ 홀드 시 견착 유지 (기존 기능 그대로)
             isAiming = true;
             if (input) input.aim = true;
             if (aimCam) aimCam.gameObject.SetActive(true);
-            ApplyFov(GetScopeFov());
-        }
-        else
-        {
-            zoomOn = !zoomOn;
-            ApplyDistance();
+            ApplyFov(GetScopeFov()); // 견착 시엔 FOV 적용
         }
     }
 
@@ -91,12 +88,6 @@ public class AimZoomHandler : MonoBehaviour
             if (aimCam) aimCam.gameObject.SetActive(false);
             ApplyFov(fovHip);
         }
-    }
-
-    private void ApplyDistance()
-    {
-        if (baseCam_cm)
-            baseCam_cm.CameraDistance = zoomOn ? zoomDistance : normalDistance;
     }
 
     private float GetScopeFov()

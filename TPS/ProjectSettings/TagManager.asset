@@ -9,6 +9,7 @@ TagManager:
   - ShootingTarget
   - Dummy
   - SpawnArea
+  - MoveTarget
   layers:
   - Default
   - TransparentFX

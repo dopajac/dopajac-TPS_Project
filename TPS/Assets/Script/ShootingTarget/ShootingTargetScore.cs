@@ -56,6 +56,16 @@ public class ShootingTargetScore : MonoBehaviour
 
             // 총알 제거
             Destroy(other.gameObject);
+            if (gameObject.CompareTag("MoveTarget"))
+            {
+                return;
+            }
+            Transform parent = transform.parent;
+            if (parent != null)
+            {
+                parent.gameObject.SetActive(false);
+                Debug.Log($"{parent.name} 비활성화됨 (총알 피격)");
+            }
         }
     }
 

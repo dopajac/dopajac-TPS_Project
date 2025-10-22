@@ -28,6 +28,8 @@ public class SpawnManager : MonoBehaviour
 
     public void SetPlayerSpawn(int RoomNumber)
     {
+        ScoreManager.Instance.Dummy_Score = 0;
+        ScoreManager.Instance.Target_Score = 0;
         if (spawnPlayersPoint == null || spawnPlayersPoint.Count <= RoomNumber)
         {
             Debug.LogWarning("[SpawnManager] 해당 RoomNumber의 스폰포인트가 없음!");

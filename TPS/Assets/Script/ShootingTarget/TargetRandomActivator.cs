@@ -37,6 +37,8 @@ public class TargetRandomActivator : MonoBehaviour
     /// </summary>
     public void StartSequence()
     {
+        foreach (var t in targets)
+            t.SetActive(false);
         if (spawnRoutine != null)
         {
             StopCoroutine(spawnRoutine);
